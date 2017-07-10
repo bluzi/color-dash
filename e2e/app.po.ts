@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class ColorDashPage {
+export class KatyushaPage {
   navigateTo() {
     return browser.get('/');
   }

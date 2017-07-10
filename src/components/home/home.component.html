@@ -1,0 +1,8 @@
+<div *ngIf="user">
+    <h1>Welcome, {{ user.name }}</h1>
+
+    <button (click)="createRoom()">Create</button>
+    <br />
+    <input [(ngModel)]="enteredRoomId" />
+    <button (click)="joinRoom()">Join</button>
+</div>

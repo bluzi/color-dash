@@ -1,10 +1,10 @@
-import { ColorDashPage } from './app.po';
+import { KatyushaPage } from './app.po';
 
-describe('color-dash App', () => {
-  let page: ColorDashPage;
+describe('katyusha App', () => {
+  let page: KatyushaPage;
 
   beforeEach(() => {
-    page = new ColorDashPage();
+    page = new KatyushaPage();
   });
 
   it('should display welcome message', done => {

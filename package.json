@@ -1,5 +1,5 @@
 {
-  "name": "color-dash",
+  "name": "color-dash-client",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "author": "Eliran Pe'er",
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.0.0",
@@ -21,8 +22,11 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
+    "@types/socket.io-client": "^1.4.29",
     "core-js": "^2.4.1",
+    "ngx-facebook": "^2.4.0",
     "rxjs": "^5.1.0",
+    "socket.io-client": "^2.0.2",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
