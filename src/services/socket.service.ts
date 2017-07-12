@@ -15,7 +15,7 @@ export class SocketService {
     const socket = socketIo('http://localhost:8080');
     const user = await this.auth.login();
 
-    socket.emit('handshake', this.auth.accessToken);
+    socket.emit('handshake', this.auth.accessToken, user.name);
 
     return new Promise<void>((resolve, reject) => {
       socket.once('handshake-response', () => {

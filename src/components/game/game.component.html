@@ -1,0 +1,12 @@
+<h1>Game started!</h1>
+
+<div class="players" *ngIf="room">
+    <a class="player-button" 
+        [class.pressed]="pressing === member"
+        *ngFor="let member of members" 
+        (click)="press(member)">
+        {{ member.alias }}
+    </a>
+</div>
+
+<button (click)="leave()">Leave room</button>

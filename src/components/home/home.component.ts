@@ -15,7 +15,7 @@ export class HomeComponent {
   enteredRoomId = '';
 
   constructor(private auth: AuthService, private roomService: RoomService,
-    private socketService: SocketService, private navigation: NavigationService) {
+              private socketService: SocketService, private navigation: NavigationService) {
     this.user = this.auth.currentUser;
   }
 

@@ -1,29 +1,24 @@
+import { ServerContext } from './../context/context';
+import { Room } from './../models/roomModel';
+import { User } from './../models/userModel';
 import { UserState, RoomState } from './../enums';
 import { log } from './../log';
-import { Room } from '../../../src/models/room.model';
 
-export function createRoom(socket: SocketIO.Socket) {
-    const currentUser = this.users.find(user => user.clientId === socket.client.id);
-    const room: Room = {
-        leaderId: currentUser.accessToken,
-        roomId: this.generateId(),
-        members: [currentUser.accessToken],
-        state: RoomState.WaitingForPlayers,
-    };
+export function createRoom(socket: SocketIO.Socket, context: ServerContext, currentUser: User) {
+    const room: Room = new Room(currentUser, context.rooms);
 
     socket.join(room.roomId);
 
-    this.rooms.push(room);
+    context.rooms.push(room);
     socket.emit('createRoomResponse', room);
     log(`Room created ${room.roomId}`);
 }
 
-export function joinRoom(socket: SocketIO.Socket, roomId: string) {
-    const currentUser = this.users.find(user => user.clientId === socket.client.id);
-    const room = this.rooms.find(r => r.roomId === roomId);
+export function joinRoom(socket: SocketIO.Socket, context: ServerContext, currentUser: User, roomId: string) {
+    const room: Room = context.rooms.find(r => r.roomId === roomId);
 
     if (room) {
-        room.members.push(currentUser.accessToken);
+        room.members.push(currentUser);
         socket.join(room.roomId);
 
         socket.in(room.roomId).emit('roomChanged', room);
@@ -36,9 +31,8 @@ export function joinRoom(socket: SocketIO.Socket, roomId: string) {
     }
 }
 
-export function getCurrentRoom(socket: SocketIO.Socket) {
-    const currentUser = this.users.find(user => user.clientId === socket.client.id);
-    const room: Room = this.rooms.find(r => r.members.indexOf(currentUser.accessToken) > -1);
+export function getCurrentRoom(socket: SocketIO.Socket, context: ServerContext, currentUser: User) {
+    const room = context.rooms.find(r => !!r.members.find(u => u.accessToken === currentUser.accessToken));
 
     if (room) {
         log(`Current room request ${room.roomId} (State: ${room.state})`);
@@ -49,20 +43,22 @@ export function getCurrentRoom(socket: SocketIO.Socket) {
     }
 }
 
-export function leaveRoom(socket: SocketIO.Socket) {
-    const currentUser = this.users.find(user => user.clientId === socket.client.id);
-    this.rooms
-        .filter(room => room.members.some(member => member === currentUser.accessToken))
+export function leaveRoom(socket: SocketIO.Socket, context: ServerContext, currentUser: User) {
+    context.rooms
+        .filter(room => room.members.some(member => member.accessToken === currentUser.accessToken))
         .forEach(room => {
-            room.members.splice(room.members.indexOf(currentUser.accessToken), 1);
+            room.members.splice(room.members.indexOf(currentUser), 1);
+            room.members = room.members.filter(m => m.accessToken !== currentUser.accessToken);
 
             if (room.members.length === 0) {
-                this.rooms.splice(this.rooms.indexOf(room), 1);
-            } else if (room.leaderId === currentUser.accessToken) {
-                room.leaderId = room.members[0];
+                context.rooms.splice(context.rooms.indexOf(room), 1);
+            } else if (room.leader.accessToken === currentUser.accessToken) {
+                room.leader = room.members[0];
             }
 
-            if (this.rooms.includes(room)) {
+            socket.leave(room.roomId);
+
+            if (context.rooms.includes(room)) {
                 socket.in(room.roomId).emit('roomChanged', room);
             }
         });
@@ -70,12 +66,17 @@ export function leaveRoom(socket: SocketIO.Socket) {
     socket.emit('leaveRoomResponse');
 }
 
-export function startGame(socket: SocketIO.Socket) {
-    const currentUser = this.users.find(user => user.clientId === socket.client.id);
-    const room: Room = this.rooms.find(r => r.leaderId === currentUser.accessToken);
+export function startGame(socket: SocketIO.Socket, context: ServerContext, currentUser: User) {
+    const room: Room = context.rooms.find(r => r.leader.accessToken === currentUser.accessToken);
+
+    room.colors = Room.generateRoomColors(room.members.length);
+
 
     if (room) {
         room.state = RoomState.GameStarted;
+
+        room.members.forEach(u => u.color = room.getColor());
+
         socket.emit('startGameResponse', true);
         socket.in(room.roomId).emit('roomChanged', room);
         log(`Starting game in room ${room.roomId}`);

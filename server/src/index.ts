@@ -1,9 +1,10 @@
+import { ServerContext } from './context/context';
+import { User } from './models/userModel';
 import * as express from 'express';
 import * as http from 'http';
 import * as socketIo from 'socket.io';
 import { Room } from '../../src/models/room.model';
 import { UserState } from './enums';
-import { User } from './user';
 import services from './services';
 import { log } from './log';
 import * as figlet from 'figlet';
@@ -11,23 +12,20 @@ import * as figlet from 'figlet';
 class Server {
     public expressApp: express.Application;
     private httpServer: any;
-    private io: SocketIO.Server;
-
-    private rooms: Room[];
-
-    private users: User[];
+    private context: ServerContext;
 
     public static bootstrap(): Server {
         return new Server();
     }
 
     constructor() {
+        this.context = new ServerContext();
+        this.context.rooms = [];
+        this.context.users = [];
+
         this.expressApp = express();
         this.httpServer = http.createServer(this.expressApp);
-        this.io = socketIo(this.httpServer);
-
-        this.rooms = [];
-        this.users = [];
+        this.context.io = socketIo(this.httpServer);
 
         console.log(figlet.textSync('Welcome'));
         this.listen();
@@ -35,10 +33,10 @@ class Server {
 
     private listen(): void {
         this.httpServer.listen(8080, () => {
-           log('Waiting for connections...');
+            log('Waiting for connections...');
         });
 
-        this.io.on('connect', (socket: SocketIO.Socket) => {
+        this.context.io.on('connect', (socket: SocketIO.Socket) => {
             log(`Connected client on port ${socket.client.id}`);
 
 
@@ -47,7 +45,10 @@ class Server {
 
                 Object.keys(serviceApi).forEach(eventName => {
                     log(`Initializing event '${eventName}'`);
-                    socket.on(eventName, (...args) => serviceApi[eventName].apply(this, [socket, ...args]));
+                    socket.on(eventName, (...args) => {
+                        const currentUser = this.context.users.find(user => user.clientId === socket.client.id);
+                        serviceApi[eventName].apply(null, [socket, this.context, currentUser, ...args]);
+                    });
                 })
             });
 
@@ -55,19 +56,6 @@ class Server {
                 log('Client disconnected');
             });
         });
-    }
-
-    private generateId() {
-        let id = '';
-        do {
-            const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-            for (let i = 0; i < 3; i++) {
-                id += possible.charAt(Math.floor(Math.random() * possible.length));
-            }
-        } while (this.rooms.some(room => room.roomId === id));
-
-        return id;
     }
 }
 

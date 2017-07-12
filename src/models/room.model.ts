@@ -1,7 +1,9 @@
+import { User } from './user.model';
+
 export class Room {
     roomId: string;
-    leaderId: string;
-    members: string[];
+    leader: User;
+    members: User[];
     state: RoomState;
 }
 

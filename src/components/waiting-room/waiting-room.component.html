@@ -5,9 +5,12 @@
     <h2>{{ room.roomId }}</h2>
 
     <ul>
-        <li *ngFor="let member of room.members" [class.leader]="member == room.leaderId">{{ member }}</li>
+        <li *ngFor="let member of room.members" 
+            [class.leader]="member.accessToken == room.leader.accessToken">
+            {{ member.alias }}
+        </li>
     </ul>
 
-    <button (click)="startGame()" *ngIf="isMine">Start Game</button> 
+    <button (click)="startGame()" *ngIf="isMine" [disabled]="room.members.length < 2">Start Game</button> 
     <button (click)="leave()">Leave</button>
 </div>

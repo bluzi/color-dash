@@ -1,11 +1,15 @@
 :host {
     text-align: center;
 
-    ul li {
-        list-style: none;
+    ul {
+        padding: 0;
 
-        &.leader {
-            font-weight: bold;
+        li {
+            list-style: none;
+
+            &.leader {
+                font-weight: bold;
+            }
         }
     }
 }
