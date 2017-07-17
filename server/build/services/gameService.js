@@ -2,14 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const log_1 = require("./../log");
 function press(socket, context, currentUser, accessToken) {
-    const pressingUser = context.users.find(u => u.accessToken === accessToken);
-    if (pressingUser.pressing === currentUser.accessToken && currentUser.color === pressingUser.color) {
-        pressingUser.pressing = undefined;
+    const pressedUser = context.users.find(u => u.accessToken === accessToken);
+    if (pressedUser.pressing === currentUser.accessToken && currentUser.color === pressedUser.color) {
+        pressedUser.pressing = undefined;
+        log_1.log(`Pressing match occured between ${currentUser.alias} and ${pressedUser.alias}`);
         const room = context.rooms.find(r => !!r.members.find(u => u.accessToken === currentUser.accessToken));
-        pressingUser.color = room.getColor();
-        context.io.in(pressingUser.clientId).send('colorChanged', pressingUser.color);
+        pressedUser.color = room.getColor();
+        context.io.in(pressedUser.clientId).emit('colorChanged', pressedUser.color);
+        log_1.log(`${pressedUser.alias} color changed to ${pressedUser.color}`);
         currentUser.color = room.getColor();
-        context.io.in(currentUser.clientId).send('colorChanged', currentUser.color);
+        context.io.in(currentUser.clientId).emit('colorChanged', currentUser.color);
+        log_1.log(`${currentUser.alias} color changed to ${currentUser.color}`);
     }
     else {
         currentUser.pressing = accessToken;

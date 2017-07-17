@@ -4,18 +4,22 @@ import { User } from './../models/userModel';
 import { ServerContext } from '../context/context';
 
 export function press(socket: SocketIO.Socket, context: ServerContext, currentUser: User, accessToken: string) {
-    const pressingUser = context.users.find(u => u.accessToken === accessToken);
+    const pressedUser = context.users.find(u => u.accessToken === accessToken);
 
-    if (pressingUser.pressing === currentUser.accessToken && currentUser.color === pressingUser.color) {
-        pressingUser.pressing = undefined;
+    if (pressedUser.pressing === currentUser.accessToken && currentUser.color === pressedUser.color) {
+        pressedUser.pressing = undefined;
+
+        log(`Pressing match occured between ${currentUser.alias} and ${pressedUser.alias}`);
 
         const room = context.rooms.find(r => !!r.members.find(u => u.accessToken === currentUser.accessToken));
 
-        pressingUser.color = room.getColor();
-        context.io.in(pressingUser.clientId).send('colorChanged', pressingUser.color);
+        pressedUser.color = room.getColor();
+        context.io.in(pressedUser.clientId).emit('colorChanged', pressedUser.color);
+        log(`${pressedUser.alias} color changed to ${pressedUser.color}`);
 
         currentUser.color = room.getColor();
-        context.io.in(currentUser.clientId).send('colorChanged', currentUser.color);
+        context.io.in(currentUser.clientId).emit('colorChanged', currentUser.color);
+        log(`${currentUser.alias} color changed to ${currentUser.color}`);
     } else {
         currentUser.pressing = accessToken;  
         log(`${currentUser.alias} is pressing ${accessToken}`);

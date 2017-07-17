@@ -17,9 +17,11 @@ import { RoomState } from '../../models/room.model';
 export class WaitingRoomComponent implements OnInit {
     room: Room;
     isMine: boolean;
+    myAccessToken: string;
 
     constructor(private roomService: RoomService, private navigation: NavigationService, private auth: AuthService) {
         this.roomService.listenToRoom().subscribe(room => (this.room = room, this.refresh()));
+        this.myAccessToken = this.auth.accessToken;
     }
 
     ngOnInit(): void {

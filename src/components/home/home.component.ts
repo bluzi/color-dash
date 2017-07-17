@@ -7,7 +7,13 @@ import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.component.html'
+  templateUrl: 'home.component.html',
+  styles: [
+    ':host { text-align: center; padding: 10px; }',
+    'h2 { margin-bottom: 40px; opacity: 0.3; }',
+    '.or { @extend .is-unselectable; font-size: 1.5em; display: inline-block; margin-right: 10px; opacity: 0.4; }',
+    '.field { margin: 10px; }',
+  ],
 })
 export class HomeComponent {
 

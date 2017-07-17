@@ -1,4 +1,4 @@
-<h1>Game started!</h1>
+<h1 class="title">Game started!</h1>
 
 <div class="players" *ngIf="room">
     <a class="player-button" 
@@ -9,4 +9,6 @@
     </a>
 </div>
 
-<button (click)="leave()">Leave room</button>
+<div class="sticky-footer">
+    <a class="button" (click)="leave()">Leave room</a>
+</div>

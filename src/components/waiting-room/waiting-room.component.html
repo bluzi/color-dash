@@ -1,16 +1,19 @@
 <h1 *ngIf="!room">Loading...</h1>
 
 <div *ngIf="room">
-    <h1>Tell your buddies to join this room:</h1>
-    <h2>{{ room.roomId }}</h2>
+    <h2 class="subtitle">Tell your buddies to join this room:</h2>
+    <h1 class="title">{{ room.roomId }}</h1>
 
+    <h1>Room Members:</h1>
     <ul>
         <li *ngFor="let member of room.members" 
             [class.leader]="member.accessToken == room.leader.accessToken">
-            {{ member.alias }}
+            {{ member.accessToken === myAccessToken ? 'You' : member.alias }}
         </li>
     </ul>
 
-    <button (click)="startGame()" *ngIf="isMine" [disabled]="room.members.length < 2">Start Game</button> 
-    <button (click)="leave()">Leave</button>
+    <div class="sticky-footer">
+        <button class="button" class.is-success="room.members.length >= 3" (click)="startGame()" *ngIf="isMine" >Start Game</button> <!--[disabled]="room.members.length < 3"--> 
+        <button class="button is-danger" (click)="leave()">Leave</button>
+    </div>
 </div>

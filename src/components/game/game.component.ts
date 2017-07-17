@@ -26,7 +26,10 @@ export class GameComponent {
                 private authService: AuthService) {
         this.roomService.getCurrentRoom().then(room => this.room = room);
         this.gameService.getColor().then(color => this.color = color);
-        this.gameService.listenToColor().subscribe(color => this.color = color);
+        this.gameService.listenToColor().subscribe(color => {
+            this.color = color;
+            this.pressing = null;
+        });
         this.roomService.listenToRoom().subscribe(room => (this.room = room, this.refresh()));
     }
 

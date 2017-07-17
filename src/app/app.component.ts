@@ -13,7 +13,8 @@ import { GameComponent } from '../components/game/game.component';
   encapsulation: ViewEncapsulation.None,
   styles: [
     '@import url("https://fonts.googleapis.com/css?family=Roboto");',
-    'html, body { margin: 0; height: 100%; font-family: "Roboto" }'
+    'html, body { margin: 0; height: 100%; font-family: "Roboto" }',
+    '.sticky-footer { position: absolute; bottom: 10px; text-align: center; width: 100%; }'
   ]
 })
 export class AppComponent implements OnInit {
