@@ -78,7 +78,7 @@ export function startGame(socket: SocketIO.Socket, context: ServerContext, curre
         room.members.forEach(u => u.color = room.getColor());
 
         socket.emit('startGameResponse', true);
-        socket.in(room.roomId).emit('roomChanged', room);
+        context.io.in(room.roomId).emit('roomChanged', room);
         log(`Starting game in room ${room.roomId}`);
     } else {
         socket.emit('startGameResponse', false);

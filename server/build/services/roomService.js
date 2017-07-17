@@ -65,7 +65,7 @@ function startGame(socket, context, currentUser) {
         room.state = enums_1.RoomState.GameStarted;
         room.members.forEach(u => u.color = room.getColor());
         socket.emit('startGameResponse', true);
-        socket.in(room.roomId).emit('roomChanged', room);
+        context.io.in(room.roomId).emit('roomChanged', room);
         log_1.log(`Starting game in room ${room.roomId}`);
     }
     else {
