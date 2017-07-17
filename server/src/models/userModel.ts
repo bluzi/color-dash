@@ -6,5 +6,6 @@ export class BaseUser {
 export class User extends BaseUser {
     pressing?: string;
     color?: string;
-    alias: string; 
+    alias: string;
+    score: number; 
 }

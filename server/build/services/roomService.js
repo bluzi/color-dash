@@ -12,7 +12,7 @@ function createRoom(socket, context, currentUser) {
 }
 exports.createRoom = createRoom;
 function joinRoom(socket, context, currentUser, roomId) {
-    const room = context.rooms.find(r => r.roomId === roomId);
+    const room = context.rooms.find(r => r.roomId.toUpperCase() === roomId.toUpperCase());
     if (room) {
         room.members.push(currentUser);
         socket.join(room.roomId);

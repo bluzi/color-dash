@@ -13,7 +13,18 @@
     </ul>
 
     <div class="sticky-footer">
-        <button class="button" class.is-success="room.members.length >= 3" (click)="startGame()" *ngIf="isMine" >Start Game</button> <!--[disabled]="room.members.length < 3"--> 
+        <button 
+            class="button" 
+            [class.is-success]="room.members.length >= 3" 
+            (click)="startGame()" 
+            *ngIf="isMine" 
+            [disabled]="room.members.length < 3">
+            Start Game
+            <span *ngIf="room.members.length < 3" class="not-enough">
+                ({{ room.members.length }} / 3)
+            </span>
+        </button>
+
         <button class="button is-danger" (click)="leave()">Leave</button>
     </div>
 </div>

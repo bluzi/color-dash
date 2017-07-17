@@ -12,7 +12,7 @@ class Room {
         return id;
     }
     static generateRoomColors(membersCount) {
-        return ['red', 'green', 'blue', 'purple', 'pink', 'orange']
+        return ['#E06577', '#6FA545', '#00659D', '#B35E7F', '#FC8990', '#0E0E0E']
             .slice(0, membersCount - 1);
     }
     constructor(leader, rooms) {
@@ -21,8 +21,12 @@ class Room {
         this.members = [leader];
         this.state = RoomState.WaitingForPlayers;
     }
-    getColor() {
-        return this.colors[Math.floor(Math.random() * this.colors.length)];
+    getColor(not) {
+        let color;
+        do {
+            color = this.colors[Math.floor(Math.random() * this.colors.length)];
+        } while (color === not);
+        return color;
     }
 }
 exports.Room = Room;

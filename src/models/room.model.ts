@@ -5,9 +5,11 @@ export class Room {
     leader: User;
     members: User[];
     state: RoomState;
+    winner?: string; 
 }
 
 export enum RoomState {
     WaitingForPlayers,
-    GameStarted
+    GameStarted,
+    Finished
 }

@@ -1,12 +1,18 @@
 <h1 class="title">Game started!</h1>
 
-<div class="players" *ngIf="room">
+<div class="players" *ngIf="room && !room.winner">
     <a class="player-button" 
-        [class.pressed]="pressing === member"
-        *ngFor="let member of members" 
-        (click)="press(member)">
-        {{ member.alias }}
+        [class.pressed]="pressing === player"
+        *ngFor="let player of players" 
+        (click)="press(player)">
+        {{ player.alias }} ({{ player.score }})
     </a>
+</div>
+
+<div class="winner" *ngIf="room && room.winner">
+    <h2 class="subtitle">
+        Game ended! the winner is <strong>{{ room.winner }}</strong>
+    </h2>
 </div>
 
 <div class="sticky-footer">

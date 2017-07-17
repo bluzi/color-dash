@@ -12,11 +12,6 @@ export class GameService {
             .once<void>('pressResponse');
     }
 
-    stopPressing(): Promise<void> {
-        return this.socket.emit('stopPressing')
-            .once<void>('stopPressingResponse');
-    }
-
     listenToColor(): Observable<string> {
         return this.socket.on('colorChanged');
     }

@@ -15,7 +15,7 @@ export function createRoom(socket: SocketIO.Socket, context: ServerContext, curr
 }
 
 export function joinRoom(socket: SocketIO.Socket, context: ServerContext, currentUser: User, roomId: string) {
-    const room: Room = context.rooms.find(r => r.roomId === roomId);
+    const room: Room = context.rooms.find(r => r.roomId.toUpperCase() === roomId.toUpperCase());
 
     if (room) {
         room.members.push(currentUser);

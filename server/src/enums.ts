@@ -5,5 +5,6 @@ export enum UserState {
 
 export enum RoomState {
     WaitingForPlayers,
-    GameStarted
+    GameStarted,
+    Finished,
 }
