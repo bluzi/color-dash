@@ -1,8 +1,8 @@
 import { ServerContext } from './../context/context';
-import { Room } from './../models/roomModel';
-import { User } from './../models/userModel';
+import { Room } from './../models/room.model';
+import { User } from './../models/user.model';
 import { UserState, RoomState } from './../enums';
-import { log } from './../log';
+import { log } from './../helpers';
 
 export function createRoom(socket: SocketIO.Socket, context: ServerContext, currentUser: User) {
     currentUser.score = 0;
@@ -52,8 +52,11 @@ export function leaveRoom(socket: SocketIO.Socket, context: ServerContext, curre
             room.members.splice(room.members.indexOf(currentUser), 1);
             room.members = room.members.filter(m => m.accessToken !== currentUser.accessToken);
 
+            log(`${currentUser.alias} left room ${room.roomId}`);
+
             if (room.members.length === 0) {
                 context.rooms.splice(context.rooms.indexOf(room), 1);
+                log(`Room ${room.roomId} has closed`);
             } else if (room.leader.accessToken === currentUser.accessToken) {
                 room.leader = room.members[0];
             }

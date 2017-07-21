@@ -1,7 +1,7 @@
 import { ServerContext } from './../context/context';
 import { UserState } from './../enums';
-import { log } from './../log';
-import { User } from '../models/userModel';
+import { log } from './../helpers';
+import { User } from '../models/user.model';
 
 export function handshake(socket: SocketIO.Socket, context: ServerContext, currentUser: User, accessToken: string, alias: string) {
     const user = context.users.find(u => u.accessToken === accessToken);

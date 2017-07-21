@@ -1,4 +1,4 @@
-import { User } from './userModel';
+import { User } from './user.model';
 
 export class Room {
     roomId: string;

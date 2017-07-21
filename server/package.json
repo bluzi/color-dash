@@ -6,7 +6,7 @@
   "author": "Eliran Pe'er",
   "license": "MIT",
   "scripts": {
-    "start": "gulp ; node build/index.js"
+    "start": "gulp ; node build/main.js"
   },
   "dependencies": {
     "@types/express": "~4.0.33",

@@ -1,5 +1,5 @@
-import { Room } from './../models/roomModel';
-import { User } from './../models/userModel';
+import { Room } from './../models/room.model';
+import { User } from './../models/user.model';
 
 export abstract class ServerContextBase {
     users: User[];

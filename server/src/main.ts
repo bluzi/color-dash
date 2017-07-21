@@ -1,18 +1,19 @@
 import { ServerContext } from './context/context';
-import { User } from './models/userModel';
 import * as express from 'express';
 import * as http from 'http';
 import * as socketIo from 'socket.io';
-import { Room } from '../../src/models/room.model';
+import { Room } from './models/room.model';
 import { UserState } from './enums';
-import services from './services';
-import { log } from './log';
+import { log } from './helpers';
 import * as figlet from 'figlet';
+import * as fs from 'fs';
+import * as path from 'path';
 
 class Server {
     public expressApp: express.Application;
     private httpServer: any;
     private context: ServerContext;
+    private api: any;
 
     public static bootstrap(): Server {
         return new Server();
@@ -28,7 +29,24 @@ class Server {
         this.context.io = socketIo(this.httpServer);
 
         console.log(figlet.textSync('Welcome'));
+        this.api = this.getApi();
         this.listen();
+    }
+
+    private getApi() {
+        const api = {};
+        fs.readdirSync(path.join(__dirname, 'endpoints'))
+            .filter(filename => filename.includes('.api.'))
+            .forEach(endpointName => {
+                const apiEndpoint = require(path.join(__dirname, 'endpoints', endpointName));
+
+                for (const eventName in apiEndpoint) {
+                    log(`Initializing event '${endpointName}.${eventName}'`);
+                    api[eventName] = apiEndpoint[eventName]
+                }
+            });
+
+        return api;
     }
 
     private listen(): void {
@@ -39,18 +57,12 @@ class Server {
         this.context.io.on('connect', (socket: SocketIO.Socket) => {
             log(`Connected client on port ${socket.client.id}`);
 
-
-            services.forEach(service => {
-                const serviceApi = require(`./services/${service}`);
-
-                Object.keys(serviceApi).forEach(eventName => {
-                    log(`Initializing event '${eventName}'`);
-                    socket.on(eventName, (...args) => {
-                        const currentUser = this.context.users.find(user => user.clientId === socket.client.id);
-                        serviceApi[eventName].apply(null, [socket, this.context, currentUser, ...args]);
-                    });
-                })
-            });
+            for (const eventName in this.api) {
+                socket.on(eventName, (...args) => {
+                    const currentUser = this.context.users.find(user => user.clientId === socket.client.id);
+                    this.api[eventName].apply(null, [socket, this.context, currentUser, ...args]);
+                });
+            };
 
             socket.on('disconnect', () => {
                 log('Client disconnected');

@@ -1,6 +1,6 @@
-import { Room, RoomState } from './../models/roomModel';
-import { log } from './../log';
-import { User } from './../models/userModel';
+import { Room, RoomState } from './../models/room.model';
+import { log } from './../helpers';
+import { User } from './../models/user.model';
 import { ServerContext } from '../context/context';
 
 export function press(socket: SocketIO.Socket, context: ServerContext, currentUser: User, accessToken: string) {

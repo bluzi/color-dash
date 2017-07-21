@@ -1,0 +1,20 @@
+<h1 *ngIf="!user">Loading...</h1>
+
+<div *ngIf="user">
+    <h1 class="title is-marginless">Colordash</h1>
+    <h2>
+        Welcome, <strong>{{ user.name }}</strong>
+    </h2>
+
+    <div class="field has-addons">
+        <div class="control">
+            <input class="input" [(ngModel)]="enteredRoomId" type="text" placeholder="Room #">
+        </div>
+        <div class="control">
+            <a class="button is-info" (click)="joinRoom()">Join a room</a>
+        </div>
+    </div>
+
+    <h3 class="or">Or, </h3>
+    <a class="button is-primary" (click)="createRoom()">Create a room</a>
+</div>
