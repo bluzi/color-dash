@@ -9,4 +9,5 @@ var RoomState;
 (function (RoomState) {
     RoomState[RoomState["WaitingForPlayers"] = 0] = "WaitingForPlayers";
     RoomState[RoomState["GameStarted"] = 1] = "GameStarted";
+    RoomState[RoomState["Finished"] = 2] = "Finished";
 })(RoomState = exports.RoomState || (exports.RoomState = {}));

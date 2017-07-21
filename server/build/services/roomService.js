@@ -4,6 +4,7 @@ const roomModel_1 = require("./../models/roomModel");
 const enums_1 = require("./../enums");
 const log_1 = require("./../log");
 function createRoom(socket, context, currentUser) {
+    currentUser.score = 0;
     const room = new roomModel_1.Room(currentUser, context.rooms);
     socket.join(room.roomId);
     context.rooms.push(room);
@@ -14,6 +15,7 @@ exports.createRoom = createRoom;
 function joinRoom(socket, context, currentUser, roomId) {
     const room = context.rooms.find(r => r.roomId.toUpperCase() === roomId.toUpperCase());
     if (room) {
+        currentUser.score = 0;
         room.members.push(currentUser);
         socket.join(room.roomId);
         socket.in(room.roomId).emit('roomChanged', room);

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const roomModel_1 = require("./../models/roomModel");
 const log_1 = require("./../log");
 function press(socket, context, currentUser, accessToken) {
     const pressedUser = context.users.find(u => u.accessToken === accessToken);
@@ -12,10 +13,12 @@ function press(socket, context, currentUser, accessToken) {
         pressedUser.score++;
         if (currentUser.score === 10) {
             room.winner = currentUser.alias;
+            room.state = roomModel_1.RoomState.Finished;
             log_1.log(`${currentUser.alias} won!`);
         }
         else if (pressedUser.score === 10) {
             room.winner = pressedUser.alias;
+            room.state = roomModel_1.RoomState.Finished;
             log_1.log(`${pressedUser.alias} won!`);
         }
         else {

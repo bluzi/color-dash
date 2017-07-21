@@ -33,18 +33,23 @@ export class Room {
         this.state = RoomState.WaitingForPlayers;
     }
 
-    getColor(not?: string) {
+    getColorExcept(not?: string) {
         let color: string;
         
         do {
-            color = this.colors[Math.floor(Math.random() * this.colors.length)];
+            color = this.getColor();
         } while (color === not);
 
         return color;
+    }
+
+    getColor() {
+        return this.colors[Math.floor(Math.random() * this.colors.length)];
     }
 }
 
 export enum RoomState {
     WaitingForPlayers,
-    GameStarted
+    GameStarted,
+    Finished
 }

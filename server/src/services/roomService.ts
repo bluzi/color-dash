@@ -5,6 +5,7 @@ import { UserState, RoomState } from './../enums';
 import { log } from './../log';
 
 export function createRoom(socket: SocketIO.Socket, context: ServerContext, currentUser: User) {
+    currentUser.score = 0;
     const room: Room = new Room(currentUser, context.rooms);
 
     socket.join(room.roomId);
@@ -18,6 +19,7 @@ export function joinRoom(socket: SocketIO.Socket, context: ServerContext, curren
     const room: Room = context.rooms.find(r => r.roomId.toUpperCase() === roomId.toUpperCase());
 
     if (room) {
+        currentUser.score = 0;
         room.members.push(currentUser);
         socket.join(room.roomId);
 

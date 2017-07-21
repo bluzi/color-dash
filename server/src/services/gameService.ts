@@ -1,8 +1,7 @@
-import { Room } from './../models/roomModel';
+import { Room, RoomState } from './../models/roomModel';
 import { log } from './../log';
 import { User } from './../models/userModel';
 import { ServerContext } from '../context/context';
-import { RoomState } from '../../../src/models/room.model';
 
 export function press(socket: SocketIO.Socket, context: ServerContext, currentUser: User, accessToken: string) {
     const pressedUser = context.users.find(u => u.accessToken === accessToken);
@@ -27,11 +26,11 @@ export function press(socket: SocketIO.Socket, context: ServerContext, currentUs
             room.state = RoomState.Finished;
             log(`${pressedUser.alias} won!`);
         } else {
-            pressedUser.color = room.getColor(pressedUser.color);
+            pressedUser.color = room.getColor();
             context.io.in(pressedUser.clientId).emit('colorChanged', pressedUser.color);
             log(`${pressedUser.alias} color changed to ${pressedUser.color}`);
 
-            currentUser.color = room.getColor(currentUser.color);
+            currentUser.color = room.getColor();
             context.io.in(currentUser.clientId).emit('colorChanged', currentUser.color);
             log(`${currentUser.alias} color changed to ${currentUser.color}`);
         }
