@@ -6,6 +6,7 @@ import { SocketService } from 'services/socket.service';
 import { WaitingRoomComponent } from '../components/waiting-room/waiting-room.component';
 import { NavigationRequest } from '../services/navigation.service';
 import { GameComponent } from '../components/game/game.component';
+import { RoomState } from '../models/room.model';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,7 @@ export class AppComponent implements OnInit {
 
     const currentRoom = await this.roomService.getCurrentRoom();
 
-    if (currentRoom) {
+    if (currentRoom && currentRoom.state !== RoomState.Finished) {
       this.navigation.navigateTo(WaitingRoomComponent, {
         room: currentRoom
       });
