@@ -1,0 +1,24 @@
+:host {
+    text-align: center;
+    padding: 10px;
+
+    ul {
+        padding: 0;
+        margin-bottom: 20px;
+
+        li {
+            list-style: none;
+            font-size: 1.25em;
+
+            &.leader {
+                font-weight: bold;
+            }
+        }
+    }
+    
+    button > .not-enough {
+        margin-left: 5px;
+        font-size: 0.75em;
+        font-weight: bold;
+    }
+}
