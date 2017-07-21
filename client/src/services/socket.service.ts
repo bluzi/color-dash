@@ -12,7 +12,7 @@ export class SocketService {
   constructor(private auth: AuthService) { }
 
   async performHandshake(): Promise<void> {
-    const socket = socketIo('http://localhost:8080');
+    const socket = socketIo('http://colordash.eu-4.evennode.com');
     const user = await this.auth.login();
 
     socket.emit('handshake', this.auth.accessToken, user.name);
