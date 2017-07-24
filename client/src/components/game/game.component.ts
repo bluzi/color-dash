@@ -15,11 +15,11 @@ import { User } from '../../models/user.model';
 })
 export class GameComponent {
     @HostBinding('style.backgroundColor') backgroundColor;
-    private timerHandle: any;
-    private color: string;
-    private room: Room;
-    private pressing: User;
-    private players: User[];
+    timerHandle: any;
+    color: string;
+    room: Room;
+    pressing: User;
+    players: User[];
 
     constructor(private roomService: RoomService, private navigation: NavigationService, private gameService: GameService,
                 private authService: AuthService) {
